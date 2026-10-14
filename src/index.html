@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DinoTyping - Fun Typing for Kids</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./main.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Top Action Bar -->
+    <header class="top-bar">
+      <button id="btn-listen" class="listen-btn" title="Click to hear the dinosaur pronounce this word">
+        <span class="play-icon">▶</span>
+        <span class="listen-text">Listen</span>
+      </button>
+
+      <div class="top-actions">
+        <!-- Category Dropdown -->
+        <div class="category-select-wrapper">
+          <select id="category-select" class="category-select" title="Choose word list">
+            <option value="kindergarten">🌱 Kindergarten</option>
+            <option value="grade1">⭐ 1st Grade</option>
+            <option value="grade2">🚀 2nd Grade</option>
+            <option value="dinosaurs">🦖 Dinosaurs</option>
+            <option value="animals">🐾 Animals</option>
+            <option value="custom">✏️ My Custom Words</option>
+          </select>
+        </div>
+
+        <!-- Sound Toggle -->
+        <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound">
+          <span id="sound-icon">🔊</span>
+        </button>
+
+        <!-- Custom Word Manager -->
+        <button id="btn-custom-words" class="icon-btn" title="Add Custom Words">
+          <span>✏️</span>
+        </button>
+
+        <!-- Reset Round -->
+        <button id="btn-restart" class="icon-btn" title="Restart Round">
+          <span>🔄</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-stage">
+      <!-- Instruction Banner -->
+      <section class="instructions-section">
+        <h1 class="instructions-title">Type the word you see on the card and then press enter or click check</h1>
+        <div class="divider"></div>
+      </section>
+
+      <!-- Counter -->
+      <div class="counter-display">
+        <span id="card-counter">1 / 10</span>
+      </div>
+
+      <!-- Carousel / Card Arena -->
+      <div class="carousel-container">
+        <!-- Peeking Left Card -->
+        <div class="peeking-card peeking-left" aria-hidden="true">
+          <div class="peek-inner">
+            <div class="peek-dino-silhouette"></div>
+            <div class="peek-input-dummy"></div>
+          </div>
+        </div>
+
+        <!-- Center Active Card -->
+        <article class="main-card" id="main-card">
+          <!-- Dinosaur Frame with Dynamic Background Color -->
+          <div class="dino-frame state-neutral" id="dino-frame">
+            <div class="dino-illustration-container" id="dino-container">
+              <!-- SVG generated here by dinosaur.js -->
+            </div>
+          </div>
+
+          <!-- Card Input & Feedback Zone -->
+          <div class="input-zone" id="input-zone">
+            <!-- Typing Form State -->
+            <form id="typing-form" class="typing-form" autocomplete="off">
+              <input 
+                type="text" 
+                id="word-input" 
+                class="word-input" 
+                placeholder="Your answer" 
+                autocomplete="off" 
+                autocorrect="off" 
+                autocapitalize="off" 
+                spellcheck="false"
+                maxlength="20"
+                autofocus
+              />
+              <button type="submit" id="btn-check" class="check-btn">Check</button>
+            </form>
+
+            <!-- Feedback State (Hidden by default, shown on submit) -->
+            <div id="feedback-display" class="feedback-display hidden">
+              <span id="feedback-typed" class="feedback-typed"></span>
+              <span id="feedback-badge" class="feedback-badge"></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Peeking Right Card -->
+        <div class="peeking-card peeking-right" aria-hidden="true">
+          <div class="peek-inner">
+            <div class="peek-dino-silhouette"></div>
+            <div class="peek-input-dummy"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Progress Bar & Navigation -->
+      <footer class="bottom-bar">
+        <div class="progress-bar-container">
+          <div class="progress-track">
+            <div id="progress-fill" class="progress-fill" style="width: 10%;"></div>
+          </div>
+        </div>
+
+        <button id="btn-next" class="next-btn" title="Next Word (or press Enter)">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </footer>
+    </main>
+
+    <!-- Confetti Canvas for Victory Celebrations -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Round Complete Celebration Modal -->
+    <div id="modal-victory" class="modal-backdrop hidden">
+      <div class="modal-card victory-card">
+        <div class="victory-header">
+          <div class="stars-row">
+            <span class="star-icon">⭐</span>
+            <span class="star-icon big">🌟</span>
+            <span class="star-icon">⭐</span>
+          </div>
+          <h2 class="victory-title">Dino-Mite Job!</h2>
+          <p class="victory-subtitle">You finished this round like a typing champion!</p>
+        </div>
+
+        <div class="victory-stats">
+          <div class="stat-pill">
+            <span class="stat-val" id="stat-correct">10</span>
+            <span class="stat-lbl">Correct</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val" id="stat-accuracy">100%</span>
+            <span class="stat-lbl">Accuracy</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val" id="stat-streak">10</span>
+            <span class="stat-lbl">Best Streak</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="btn-play-again" class="btn-primary">Play Again! 🦖</button>
+          <button id="btn-choose-level" class="btn-secondary">Change Level 🌱</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Words Modal for Parents & Teachers -->
+    <div id="modal-custom-words" class="modal-backdrop hidden">
+      <div class="modal-card custom-words-card">
+        <div class="modal-header">
+          <h3>✏️ Add Custom Words</h3>
+          <button id="btn-close-modal" class="close-btn">&times;</button>
+        </div>
+        <p class="modal-desc">Type your child's weekly spelling list or favorite words:</p>
+        
+        <form id="custom-word-form" class="custom-form">
+          <input 
+            type="text" 
+            id="custom-word-input" 
+            class="custom-input" 
+            placeholder="Type a word (e.g. dinosaur, water, friend)" 
+            maxlength="20"
+          />
+          <button type="submit" class="btn-add">Add Word</button>
+        </form>
+
+        <div class="custom-word-list" id="custom-word-list">
+          <!-- Custom words rendered here -->
+        </div>
+
+        <div class="modal-footer">
+          <button id="btn-use-custom" class="btn-primary full-width">Practice Custom Words Now!</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

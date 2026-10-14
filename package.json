@@ -1,0 +1,16 @@
+{
+  "name": "dinotyping",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fun dinosaur typing game for kids in Rust",
+  "type": "module",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri",
+    "serve": "npx -y serve src -l 4173"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
