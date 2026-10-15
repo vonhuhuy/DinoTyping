@@ -20,21 +20,26 @@
           <span class="listen-text">Listen</span>
         </button>
 
-        <!-- Dinosaur Friend Selector -->
+        <!-- Dinosaur Friend Selector (10 Species) -->
         <div class="dino-select-wrapper">
           <select id="dino-select" class="dino-select" title="Choose your dinosaur friend">
-            <option value="auto">🎲 All Dino Friends</option>
+            <option value="auto">🎲 All Dino Friends (Rotate)</option>
             <option value="rex">🦖 Rexy (T-Rex)</option>
             <option value="trike">🦏 Trike (Triceratops)</option>
-            <option value="steg">✨ Steggy (Stegosaurus)</option>
-            <option value="brachio">🌿 Longneck (Brachio)</option>
+            <option value="steg">🛡️ Steggy (Stegosaurus)</option>
+            <option value="brachio">🦕 Longneck (Brachio)</option>
+            <option value="cory">👑 Cory (Corythosaurus)</option>
+            <option value="lambeo">🪓 Lambeo (Lambeosaurus)</option>
+            <option value="allo">🔥 Allo (Allosaurus)</option>
+            <option value="raptor">⚡ Raptor (Velociraptor)</option>
+            <option value="pachy">🥊 Pachy (Pachycephalo)</option>
             <option value="ptery">🪽 Ptery (Pterosaur)</option>
           </select>
         </div>
       </div>
 
       <div class="top-actions">
-        <!-- Category Dropdown -->
+        <!-- Category Dropdown (with Trains and Under the Sea) -->
         <div class="category-select-wrapper">
           <select id="category-select" class="category-select" title="Choose word list">
             <option value="kindergarten">🌱 Kindergarten</option>
@@ -42,6 +47,8 @@
             <option value="grade2">🚀 2nd Grade</option>
             <option value="dinosaurs">🦖 Dinosaurs</option>
             <option value="animals">🐾 Animals</option>
+            <option value="trains">🚂 Trains & Vehicles</option>
+            <option value="undersea">🌊 Under the Sea</option>
             <option value="custom">✏️ My Custom Words</option>
           </select>
         </div>
@@ -148,14 +155,14 @@
         </div>
       </div>
 
-      <!-- On-Screen Visual Keyboard for Finger Placement -->
+      <!-- On-Screen Visual Keyboard for Finger Placement (1 = Thumb, 5 = Pinky) -->
       <section class="keyboard-section" id="keyboard-section">
         <div class="keyboard-legend">
-          <span class="legend-item"><span class="legend-dot dot-pinky"></span> Pinky</span>
-          <span class="legend-item"><span class="legend-dot dot-ring"></span> Ring</span>
-          <span class="legend-item"><span class="legend-dot dot-mid"></span> Middle</span>
-          <span class="legend-item"><span class="legend-dot dot-idx"></span> Index</span>
-          <span class="legend-item"><span class="legend-dot dot-target"></span> Next Key</span>
+          <span class="legend-item"><span class="legend-dot dot-finger-5"></span> <strong>5</strong> Pinky</span>
+          <span class="legend-item"><span class="legend-dot dot-finger-4"></span> <strong>4</strong> Ring</span>
+          <span class="legend-item"><span class="legend-dot dot-finger-3"></span> <strong>3</strong> Middle</span>
+          <span class="legend-item"><span class="legend-dot dot-finger-2"></span> <strong>2</strong> Index</span>
+          <span class="legend-item"><span class="legend-dot dot-finger-1"></span> <strong>1</strong> Thumb</span>
         </div>
         <div id="virtual-keyboard-container"></div>
       </section>

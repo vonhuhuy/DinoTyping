@@ -850,17 +850,18 @@ body {
 }
 
 .legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
-.dot-pinky { background: #f472b6; }
-.dot-ring  { background: #fb923c; }
-.dot-mid   { background: #facc15; }
-.dot-idx   { background: #38bdf8; }
-.dot-target { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+.dot-finger-5 { background: #f472b6; } /* Pinky */
+.dot-finger-4 { background: #fb923c; } /* Ring */
+.dot-finger-3 { background: #facc15; } /* Middle */
+.dot-finger-2 { background: #38bdf8; } /* Index */
+.dot-finger-1 { background: #a855f7; } /* Thumb */
 
 .virtual-keyboard {
   display: flex;
@@ -877,11 +878,11 @@ body {
 }
 
 .keyboard-key {
-  height: 44px;
+  height: 46px;
   min-width: 38px;
   flex: 1;
   max-width: 54px;
-  border-radius: 8px;
+  border-radius: 9px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #1e293b;
   color: #f8fafc;
@@ -889,12 +890,31 @@ body {
   font-size: 1.05rem;
   font-weight: 600;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.12s ease;
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
   position: relative;
+  padding: 2px;
+}
+
+.keyboard-key .finger-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  opacity: 0.75;
+  border-radius: 4px;
+  padding: 0 3px;
+  line-height: 1.2;
+}
+
+.keyboard-key .key-label {
+  font-size: 1.05rem;
+  line-height: 1;
 }
 
 .keyboard-key:hover {
@@ -908,21 +928,40 @@ body {
   filter: brightness(1.35);
 }
 
-/* Finger placement colors (soft pastel badges) */
-.keyboard-key.finger-pinky-l, .keyboard-key.finger-pinky-r {
-  border-bottom: 3px solid #f472b6;
+/* Finger placement color borders (1 = Thumb, 5 = Pinky) */
+.keyboard-key.finger-num-5 {
+  border-bottom: 3.5px solid #f472b6;
 }
-.keyboard-key.finger-ring-l, .keyboard-key.finger-ring-r {
-  border-bottom: 3px solid #fb923c;
+.keyboard-key.finger-num-5 .finger-badge {
+  color: #f472b6;
 }
-.keyboard-key.finger-mid-l, .keyboard-key.finger-mid-r {
-  border-bottom: 3px solid #facc15;
+
+.keyboard-key.finger-num-4 {
+  border-bottom: 3.5px solid #fb923c;
 }
-.keyboard-key.finger-idx-l, .keyboard-key.finger-idx-r {
-  border-bottom: 3px solid #38bdf8;
+.keyboard-key.finger-num-4 .finger-badge {
+  color: #fb923c;
 }
-.keyboard-key.finger-thumb {
-  border-bottom: 3px solid #a78bfa;
+
+.keyboard-key.finger-num-3 {
+  border-bottom: 3.5px solid #facc15;
+}
+.keyboard-key.finger-num-3 .finger-badge {
+  color: #facc15;
+}
+
+.keyboard-key.finger-num-2 {
+  border-bottom: 3.5px solid #38bdf8;
+}
+.keyboard-key.finger-num-2 .finger-badge {
+  color: #38bdf8;
+}
+
+.keyboard-key.finger-num-1 {
+  border-bottom: 3.5px solid #a855f7;
+}
+.keyboard-key.finger-num-1 .finger-badge {
+  color: #c084fc;
 }
 
 .keyboard-key.key-wide {
@@ -936,26 +975,71 @@ body {
   max-width: 260px;
 }
 
-/* Pulsing Next Key Highlight Guide! */
+/* KEYBOARD VISUAL HIGHLIGHT MATCHING THE COLOR OF THE FINGER */
 .keyboard-key.key-highlight-target {
-  background: #22c55e !important;
   color: #ffffff !important;
-  border-color: #86efac !important;
-  box-shadow: 0 0 14px rgba(34, 197, 94, 0.75), 0 3px 0 #15803d !important;
-  animation: keyPulse 0.9s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(-2px);
-  z-index: 2;
+  z-index: 3;
 }
 
-@keyframes keyPulse {
-  from {
-    transform: translateY(-2px) scale(1);
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d;
-  }
-  to {
-    transform: translateY(-3px) scale(1.08);
-    box-shadow: 0 0 18px rgba(34, 197, 94, 0.95), 0 4px 0 #15803d;
-  }
+/* Finger 5 (Pinky) Highlight */
+.keyboard-key.key-highlight-target.finger-num-5 {
+  background: #db2777 !important;
+  border-color: #fbcfe8 !important;
+  box-shadow: 0 0 16px rgba(244, 114, 182, 0.95), 0 3px 0 #9d174d !important;
+  animation: keyPulsePinky 0.85s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes keyPulsePinky {
+  from { transform: translateY(-2px) scale(1); box-shadow: 0 0 8px rgba(244, 114, 182, 0.7), 0 3px 0 #9d174d; }
+  to { transform: translateY(-3px) scale(1.08); box-shadow: 0 0 20px rgba(244, 114, 182, 1), 0 4px 0 #9d174d; }
+}
+
+/* Finger 4 (Ring) Highlight */
+.keyboard-key.key-highlight-target.finger-num-4 {
+  background: #ea580c !important;
+  border-color: #fed7aa !important;
+  box-shadow: 0 0 16px rgba(251, 146, 60, 0.95), 0 3px 0 #9a3412 !important;
+  animation: keyPulseRing 0.85s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes keyPulseRing {
+  from { transform: translateY(-2px) scale(1); box-shadow: 0 0 8px rgba(251, 146, 60, 0.7), 0 3px 0 #9a3412; }
+  to { transform: translateY(-3px) scale(1.08); box-shadow: 0 0 20px rgba(251, 146, 60, 1), 0 4px 0 #9a3412; }
+}
+
+/* Finger 3 (Middle) Highlight */
+.keyboard-key.key-highlight-target.finger-num-3 {
+  background: #ca8a04 !important;
+  border-color: #fef08a !important;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.95), 0 3px 0 #854d0e !important;
+  animation: keyPulseMid 0.85s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes keyPulseMid {
+  from { transform: translateY(-2px) scale(1); box-shadow: 0 0 8px rgba(250, 204, 21, 0.7), 0 3px 0 #854d0e; }
+  to { transform: translateY(-3px) scale(1.08); box-shadow: 0 0 20px rgba(250, 204, 21, 1), 0 4px 0 #854d0e; }
+}
+
+/* Finger 2 (Index) Highlight */
+.keyboard-key.key-highlight-target.finger-num-2 {
+  background: #0284c7 !important;
+  border-color: #7dd3fc !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95), 0 3px 0 #0369a1 !important;
+  animation: keyPulseIdx 0.85s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes keyPulseIdx {
+  from { transform: translateY(-2px) scale(1); box-shadow: 0 0 8px rgba(56, 189, 248, 0.7), 0 3px 0 #0369a1; }
+  to { transform: translateY(-3px) scale(1.08); box-shadow: 0 0 20px rgba(56, 189, 248, 1), 0 4px 0 #0369a1; }
+}
+
+/* Finger 1 (Thumb) Highlight */
+.keyboard-key.key-highlight-target.finger-num-1 {
+  background: #9333ea !important;
+  border-color: #e9d5ff !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.95), 0 3px 0 #6b21a8 !important;
+  animation: keyPulseThumb 0.85s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes keyPulseThumb {
+  from { transform: translateY(-2px) scale(1); box-shadow: 0 0 8px rgba(168, 85, 247, 0.7), 0 3px 0 #6b21a8; }
+  to { transform: translateY(-3px) scale(1.08); box-shadow: 0 0 20px rgba(168, 85, 247, 1), 0 4px 0 #6b21a8; }
 }
 
 /* Responsive adjustments */

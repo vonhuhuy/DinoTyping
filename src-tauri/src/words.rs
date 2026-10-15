@@ -51,6 +51,20 @@ impl WordStore {
                 word_count: 16,
             },
             CategoryInfo {
+                id: "trains".to_string(),
+                name: "Trains & Vehicles".to_string(),
+                description: "Chugga-chugga tracks, engines, and train cars".to_string(),
+                icon: "🚂".to_string(),
+                word_count: 16,
+            },
+            CategoryInfo {
+                id: "undersea".to_string(),
+                name: "Under the Sea".to_string(),
+                description: "Whales, sharks, corals, and sea creatures".to_string(),
+                icon: "🌊".to_string(),
+                word_count: 16,
+            },
+            CategoryInfo {
                 id: "custom".to_string(),
                 name: "My Custom Words".to_string(),
                 description: "Words added by parents or teachers".to_string(),
@@ -218,6 +232,64 @@ impl WordStore {
                 word: w.to_string(),
                 phonetic: Some(p.to_string()),
                 category: "animals".to_string(),
+                hint: Some(h.to_string()),
+            })
+            .collect(),
+
+            "trains" => vec![
+                ("train", "treɪn", "Engine that rides on steel tracks"),
+                ("track", "træk", "Steel rails a train travels on"),
+                ("steam", "stiːm", "Hot white cloud from old engines"),
+                ("engine", "ˈɛndʒɪn", "Machine that pulls all train cars"),
+                ("wheel", "wiːl", "Round steel parts that roll along"),
+                ("whistle", "ˈwɪsəl", "Loud toot-toot sound of a train"),
+                ("caboose", "kəˈbuːs", "The red car at the very end"),
+                ("cargo", "ˈkɑːrɡoʊ", "Goods carried inside train cars"),
+                ("station", "ˈsteɪʃən", "Where passengers board the train"),
+                ("rail", "reɪl", "Strong steel path trains run on"),
+                ("tunnel", "ˈtʌnəl", "Passage carved through a mountain"),
+                ("chug", "tʃʌɡ", "The chugga-chugga sound of a train"),
+                ("ticket", "ˈtɪkɪt", "Pass allowing you to ride"),
+                ("signal", "ˈsɪɡnəl", "Green and red lights along tracks"),
+                ("coal", "koʊl", "Black rocks powering steam engines"),
+                ("freight", "freɪt", "Heavy goods hauled across countries"),
+            ]
+            .into_iter()
+            .enumerate()
+            .map(|(idx, (w, p, h))| WordItem {
+                id: format!("train_{}", idx + 1),
+                word: w.to_string(),
+                phonetic: Some(p.to_string()),
+                category: "trains".to_string(),
+                hint: Some(h.to_string()),
+            })
+            .collect(),
+
+            "undersea" => vec![
+                ("shark", "ʃɑːrk", "Fast ocean swimmer with a dorsal fin"),
+                ("whale", "weɪl", "Giant gentle mammal of the blue sea"),
+                ("coral", "ˈkɔːrəl", "Colorful underwater ocean reef homes"),
+                ("shell", "ʃɛl", "Hard protective home on the beach"),
+                ("dolphin", "ˈdɒlfɪn", "Playful intelligent sea jumper"),
+                ("octopus", "ˈɒktəpʊs", "Clever friend with eight arms"),
+                ("ocean", "ˈoʊʃən", "Vast blue body of salt water"),
+                ("jellyfish", "ˈdʒɛlifɪʃ", "Translucent bell floating in sea"),
+                ("starfish", "ˈstɑːrfɪʃ", "Five-armed friend on rocks"),
+                ("seahorse", "ˈsiːhɔːrs", "Tiny curled-tail horse of the ocean"),
+                ("crab", "kræb", "Walks sideways with two pinchers"),
+                ("waves", "weɪvz", "Curling crests of moving water"),
+                ("reef", "riːf", "Busy underwater city of fish"),
+                ("treasure", "ˈtrɛʒər", "Sunken golden chest in the deep"),
+                ("squid", "skwɪd", "Quick tentacled ocean swimmer"),
+                ("diver", "ˈdaɪvər", "Explorer swimming with flippers"),
+            ]
+            .into_iter()
+            .enumerate()
+            .map(|(idx, (w, p, h))| WordItem {
+                id: format!("sea_{}", idx + 1),
+                word: w.to_string(),
+                phonetic: Some(p.to_string()),
+                category: "undersea".to_string(),
                 hint: Some(h.to_string()),
             })
             .collect(),

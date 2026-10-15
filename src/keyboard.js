@@ -1,49 +1,60 @@
 // On-Screen Interactive Visual Keyboard for DinoTyping
+// Finger numbers 1-5 where 1 is the thumb for both hands:
+// 1 = Thumb
+// 2 = Index
+// 3 = Middle
+// 4 = Ring
+// 5 = Pinky
 
-// Finger color classes:
-// pinky: Q, A, Z, P
-// ring: W, S, X, O, L
-// middle: E, D, C, I, K
-// index: R, T, F, G, V, B, Y, U, H, J, N, M
-// thumb: Space
+export const FINGER_INFO = {
+  1: { name: 'Thumb', color: '#a855f7', label: '1 (Thumb)' },
+  2: { name: 'Index', color: '#38bdf8', label: '2 (Index)' },
+  3: { name: 'Middle', color: '#facc15', label: '3 (Middle)' },
+  4: { name: 'Ring', color: '#fb923c', label: '4 (Ring)' },
+  5: { name: 'Pinky', color: '#f472b6', label: '5 (Pinky)' },
+};
 
 const KEY_LAYOUT = [
+  // Row 1
   [
-    { key: 'q', finger: 'finger-pinky-l' },
-    { key: 'w', finger: 'finger-ring-l' },
-    { key: 'e', finger: 'finger-mid-l' },
-    { key: 'r', finger: 'finger-idx-l' },
-    { key: 't', finger: 'finger-idx-l' },
-    { key: 'y', finger: 'finger-idx-r' },
-    { key: 'u', finger: 'finger-idx-r' },
-    { key: 'i', finger: 'finger-mid-r' },
-    { key: 'o', finger: 'finger-ring-r' },
-    { key: 'p', finger: 'finger-pinky-r' },
+    { key: 'q', finger: 5, hand: 'L' },
+    { key: 'w', finger: 4, hand: 'L' },
+    { key: 'e', finger: 3, hand: 'L' },
+    { key: 'r', finger: 2, hand: 'L' },
+    { key: 't', finger: 2, hand: 'L' },
+    { key: 'y', finger: 2, hand: 'R' },
+    { key: 'u', finger: 2, hand: 'R' },
+    { key: 'i', finger: 3, hand: 'R' },
+    { key: 'o', finger: 4, hand: 'R' },
+    { key: 'p', finger: 5, hand: 'R' },
   ],
+  // Row 2
   [
-    { key: 'a', finger: 'finger-pinky-l' },
-    { key: 's', finger: 'finger-ring-l' },
-    { key: 'd', finger: 'finger-mid-l' },
-    { key: 'f', finger: 'finger-idx-l' },
-    { key: 'g', finger: 'finger-idx-l' },
-    { key: 'h', finger: 'finger-idx-r' },
-    { key: 'j', finger: 'finger-idx-r' },
-    { key: 'k', finger: 'finger-mid-r' },
-    { key: 'l', finger: 'finger-ring-r' },
+    { key: 'a', finger: 5, hand: 'L' },
+    { key: 's', finger: 4, hand: 'L' },
+    { key: 'd', finger: 3, hand: 'L' },
+    { key: 'f', finger: 2, hand: 'L' },
+    { key: 'g', finger: 2, hand: 'L' },
+    { key: 'h', finger: 2, hand: 'R' },
+    { key: 'j', finger: 2, hand: 'R' },
+    { key: 'k', finger: 3, hand: 'R' },
+    { key: 'l', finger: 4, hand: 'R' },
   ],
+  // Row 3
   [
-    { key: 'z', finger: 'finger-pinky-l' },
-    { key: 'x', finger: 'finger-ring-l' },
-    { key: 'c', finger: 'finger-mid-l' },
-    { key: 'v', finger: 'finger-idx-l' },
-    { key: 'b', finger: 'finger-idx-l' },
-    { key: 'n', finger: 'finger-idx-r' },
-    { key: 'm', finger: 'finger-idx-r' },
-    { key: 'Backspace', label: '⌫', action: 'backspace', finger: 'finger-pinky-r', wide: true },
+    { key: 'z', finger: 5, hand: 'L' },
+    { key: 'x', finger: 4, hand: 'L' },
+    { key: 'c', finger: 3, hand: 'L' },
+    { key: 'v', finger: 2, hand: 'L' },
+    { key: 'b', finger: 2, hand: 'L' },
+    { key: 'n', finger: 2, hand: 'R' },
+    { key: 'm', finger: 2, hand: 'R' },
+    { key: 'Backspace', label: '⌫', finger: 5, hand: 'R', wide: true },
   ],
+  // Row 4
   [
-    { key: ' ', label: 'Space', action: 'space', finger: 'finger-thumb', extraWide: true },
-    { key: 'Enter', label: 'Check ⏎', action: 'enter', finger: 'finger-pinky-r', wide: true },
+    { key: ' ', label: 'Space', finger: 1, hand: 'Both', extraWide: true },
+    { key: 'Enter', label: 'Check ⏎', finger: 5, hand: 'R', wide: true },
   ]
 ];
 
@@ -52,6 +63,7 @@ export class VisualKeyboard {
     this.container = document.getElementById(containerId);
     this.onKeyPress = onKeyPress;
     this.keyElements = new Map();
+    this.keyData = new Map();
     this.targetKey = null;
 
     if (this.container) {
@@ -72,9 +84,22 @@ export class VisualKeyboard {
       row.forEach((item) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `keyboard-key ${item.finger || ''} ${item.wide ? 'key-wide' : ''} ${item.extraWide ? 'key-space' : ''}`;
+        btn.className = `keyboard-key finger-num-${item.finger} ${item.wide ? 'key-wide' : ''} ${item.extraWide ? 'key-space' : ''}`;
         btn.dataset.key = item.key.toLowerCase();
-        btn.textContent = item.label || item.key.toUpperCase();
+        btn.dataset.finger = item.finger;
+
+        // Key label and little finger number badge (1-5)
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'key-label';
+        labelSpan.textContent = item.label || item.key.toUpperCase();
+
+        const fingerBadge = document.createElement('span');
+        fingerBadge.className = 'finger-badge';
+        fingerBadge.textContent = item.finger;
+        fingerBadge.title = `Finger ${item.finger}: ${FINGER_INFO[item.finger].name}`;
+
+        btn.appendChild(fingerBadge);
+        btn.appendChild(labelSpan);
 
         btn.addEventListener('click', (e) => {
           e.preventDefault();
@@ -82,6 +107,7 @@ export class VisualKeyboard {
         });
 
         this.keyElements.set(item.key.toLowerCase(), btn);
+        this.keyData.set(item.key.toLowerCase(), item);
         rowEl.appendChild(btn);
       });
 
@@ -121,7 +147,7 @@ export class VisualKeyboard {
     }
   }
 
-  // Highlight next letter in word to guide kid!
+  // Highlight next letter matching the specific finger color!
   updateTargetKey(targetWord = '', currentTyped = '') {
     // Clear previous highlight
     if (this.targetKey) {
@@ -135,19 +161,18 @@ export class VisualKeyboard {
     const cleanTarget = targetWord.trim().toLowerCase();
     const cleanTyped = currentTyped.trim().toLowerCase();
 
+    let nextChar = null;
     if (cleanTyped.length < cleanTarget.length) {
-      const nextChar = cleanTarget[cleanTyped.length];
+      nextChar = cleanTarget[cleanTyped.length];
+    } else if (cleanTyped.length === cleanTarget.length && cleanTyped.length > 0) {
+      nextChar = 'enter';
+    }
+
+    if (nextChar) {
       const btn = this.keyElements.get(nextChar);
       if (btn) {
         btn.classList.add('key-highlight-target');
         this.targetKey = nextChar;
-      }
-    } else if (cleanTyped.length === cleanTarget.length && cleanTyped.length > 0) {
-      // Suggest Enter key
-      const enterBtn = this.keyElements.get('enter');
-      if (enterBtn) {
-        enterBtn.classList.add('key-highlight-target');
-        this.targetKey = 'enter';
       }
     }
   }

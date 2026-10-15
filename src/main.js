@@ -97,6 +97,16 @@ const FALLBACK_WORDS = {
     { word: 'frog' }, { word: 'duck' }, { word: 'fish' }, { word: 'bird' },
     { word: 'wolf' }, { word: 'deer' }, { word: 'panda' }, { word: 'tiger' }
   ],
+  trains: [
+    { word: 'train' }, { word: 'track' }, { word: 'steam' }, { word: 'engine' },
+    { word: 'wheel' }, { word: 'whistle' }, { word: 'caboose' }, { word: 'cargo' },
+    { word: 'station' }, { word: 'rail' }, { word: 'tunnel' }, { word: 'chug' }
+  ],
+  undersea: [
+    { word: 'shark' }, { word: 'whale' }, { word: 'coral' }, { word: 'shell' },
+    { word: 'dolphin' }, { word: 'octopus' }, { word: 'ocean' }, { word: 'jellyfish' },
+    { word: 'starfish' }, { word: 'seahorse' }, { word: 'crab' }, { word: 'waves' }
+  ],
   custom: [
     { word: 'happy' }, { word: 'smile' }
   ]
@@ -137,11 +147,11 @@ wordInput.addEventListener('input', () => {
   }
 });
 
-// Determine active dinosaur species for current card
+// Determine active dinosaur species for current card (10 species rotation!)
 function resolveDinoSpecies() {
   const chosen = dinoSelect ? dinoSelect.value : 'auto';
   if (chosen === 'auto') {
-    const speciesList = ['rex', 'trike', 'steg', 'brachio', 'ptery'];
+    const speciesList = ['rex', 'trike', 'steg', 'brachio', 'cory', 'lambeo', 'allo', 'raptor', 'pachy', 'ptery'];
     return speciesList[currentIndex % speciesList.length];
   }
   return chosen;
