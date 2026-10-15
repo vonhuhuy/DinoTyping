@@ -147,11 +147,11 @@ wordInput.addEventListener('input', () => {
   }
 });
 
-// Determine active dinosaur species for current card (10 species rotation!)
+// Determine active dinosaur species for current card (Snap Squad 8 species rotation!)
 function resolveDinoSpecies() {
   const chosen = dinoSelect ? dinoSelect.value : 'auto';
   if (chosen === 'auto') {
-    const speciesList = ['rex', 'trike', 'steg', 'brachio', 'cory', 'lambeo', 'allo', 'raptor', 'pachy', 'ptery'];
+    const speciesList = ['carno', 'dilo', 'rex', 'spino', 'raptor', 'para', 'trike', 'steg'];
     return speciesList[currentIndex % speciesList.length];
   }
   return chosen;
