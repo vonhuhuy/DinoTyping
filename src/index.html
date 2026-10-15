@@ -14,10 +14,24 @@
   <body>
     <!-- Top Action Bar -->
     <header class="top-bar">
-      <button id="btn-listen" class="listen-btn" title="Click to hear the dinosaur pronounce this word">
-        <span class="play-icon">▶</span>
-        <span class="listen-text">Listen</span>
-      </button>
+      <div class="top-left-group">
+        <button id="btn-listen" class="listen-btn" title="Click to hear the dinosaur pronounce this word">
+          <span class="play-icon">▶</span>
+          <span class="listen-text">Listen</span>
+        </button>
+
+        <!-- Dinosaur Friend Selector -->
+        <div class="dino-select-wrapper">
+          <select id="dino-select" class="dino-select" title="Choose your dinosaur friend">
+            <option value="auto">🎲 All Dino Friends</option>
+            <option value="rex">🦖 Rexy (T-Rex)</option>
+            <option value="trike">🦏 Trike (Triceratops)</option>
+            <option value="steg">✨ Steggy (Stegosaurus)</option>
+            <option value="brachio">🌿 Longneck (Brachio)</option>
+            <option value="ptery">🪽 Ptery (Pterosaur)</option>
+          </select>
+        </div>
+      </div>
 
       <div class="top-actions">
         <!-- Category Dropdown -->
@@ -31,6 +45,11 @@
             <option value="custom">✏️ My Custom Words</option>
           </select>
         </div>
+
+        <!-- Toggle On-Screen Keyboard -->
+        <button id="btn-toggle-keyboard" class="icon-btn" title="Toggle On-Screen Keyboard Guide">
+          <span>⌨️</span>
+        </button>
 
         <!-- Sound Toggle -->
         <button id="btn-sound-toggle" class="icon-btn" title="Toggle Sound">
@@ -116,6 +135,30 @@
           </div>
         </div>
       </div>
+
+      <!-- 5s Auto-advance Cooldown Bar -->
+      <div id="cooldown-pill" class="cooldown-pill hidden">
+        <div class="cooldown-header">
+          <span class="cooldown-timer-icon">⏳</span>
+          <span class="cooldown-text">Next word in <strong id="cooldown-seconds">5s</strong></span>
+          <span class="cooldown-skip-hint">(Press Enter or ➔ to advance)</span>
+        </div>
+        <div class="cooldown-bar-track">
+          <div id="cooldown-progress-bar" class="cooldown-progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- On-Screen Visual Keyboard for Finger Placement -->
+      <section class="keyboard-section" id="keyboard-section">
+        <div class="keyboard-legend">
+          <span class="legend-item"><span class="legend-dot dot-pinky"></span> Pinky</span>
+          <span class="legend-item"><span class="legend-dot dot-ring"></span> Ring</span>
+          <span class="legend-item"><span class="legend-dot dot-mid"></span> Middle</span>
+          <span class="legend-item"><span class="legend-dot dot-idx"></span> Index</span>
+          <span class="legend-item"><span class="legend-dot dot-target"></span> Next Key</span>
+        </div>
+        <div id="virtual-keyboard-container"></div>
+      </section>
 
       <!-- Bottom Progress Bar & Navigation -->
       <footer class="bottom-bar">

@@ -1,6 +1,7 @@
-import { renderDinosaurSvg } from './dinosaur.js';
+import { renderDinosaurSvg, DINO_SPECIES } from './dinosaur.js';
 import { soundManager } from './audio.js';
 import { confetti } from './confetti.js';
+import { VisualKeyboard } from './keyboard.js';
 
 // DOM Elements
 const cardCounter = document.getElementById('card-counter');
@@ -18,7 +19,15 @@ const btnRestart = document.getElementById('btn-restart');
 const btnSoundToggle = document.getElementById('btn-sound-toggle');
 const soundIcon = document.getElementById('sound-icon');
 const categorySelect = document.getElementById('category-select');
+const dinoSelect = document.getElementById('dino-select');
 const btnCustomWords = document.getElementById('btn-custom-words');
+const btnToggleKeyboard = document.getElementById('btn-toggle-keyboard');
+const keyboardSection = document.getElementById('keyboard-section');
+
+// 5s Auto-advance Cooldown Elements (Triggers ONLY AFTER SUBMIT)
+const cooldownPill = document.getElementById('cooldown-pill');
+const cooldownSeconds = document.getElementById('cooldown-seconds');
+const cooldownProgressBar = document.getElementById('cooldown-progress-bar');
 
 // Modals
 const modalVictory = document.getElementById('modal-victory');
@@ -39,8 +48,12 @@ const btnUseCustom = document.getElementById('btn-use-custom');
 let wordsDeck = [];
 let currentIndex = 0;
 let currentWord = null;
+let currentDinoSpecies = 'rex';
 let cardState = 'neutral'; // 'neutral' | 'correct' | 'incorrect'
 let isAnswerSubmitted = false;
+let cooldownTimer = null;
+let cooldownInterval = null;
+
 let sessionStats = {
   totalAttempted: 0,
   totalCorrect: 0,
@@ -89,8 +102,55 @@ const FALLBACK_WORDS = {
   ]
 };
 
+// Initialize Virtual Keyboard
+const visualKeyboard = new VisualKeyboard('virtual-keyboard-container', (key) => {
+  if (isAnswerSubmitted) {
+    if (key === 'Enter') {
+      nextCard();
+    }
+    return;
+  }
+
+  soundManager.playPop();
+
+  if (key === 'Backspace') {
+    wordInput.value = wordInput.value.slice(0, -1);
+  } else if (key === 'Enter') {
+    submitWord();
+    return;
+  } else if (key === ' ') {
+    wordInput.value += ' ';
+  } else if (key.length === 1) {
+    wordInput.value += key.toLowerCase();
+  }
+
+  wordInput.focus();
+  if (currentWord) {
+    visualKeyboard.updateTargetKey(currentWord.word, wordInput.value);
+  }
+});
+
+// Update Target Key when user types on physical keyboard
+wordInput.addEventListener('input', () => {
+  if (currentWord) {
+    visualKeyboard.updateTargetKey(currentWord.word, wordInput.value);
+  }
+});
+
+// Determine active dinosaur species for current card
+function resolveDinoSpecies() {
+  const chosen = dinoSelect ? dinoSelect.value : 'auto';
+  if (chosen === 'auto') {
+    const speciesList = ['rex', 'trike', 'steg', 'brachio', 'ptery'];
+    return speciesList[currentIndex % speciesList.length];
+  }
+  return chosen;
+}
+
 // Load round words from Rust backend (or local fallback)
 async function doLoadRound(category = 'kindergarten') {
+  stopAutoAdvanceCooldown();
+
   const invoke = getTauriInvoke();
   if (invoke) {
     try {
@@ -120,8 +180,11 @@ function shuffleArray(arr) {
 function displayCard(index) {
   if (!wordsDeck || wordsDeck.length === 0) return;
 
+  stopAutoAdvanceCooldown();
+
   currentIndex = index;
   currentWord = wordsDeck[currentIndex];
+  currentDinoSpecies = resolveDinoSpecies();
   cardState = 'neutral';
   isAnswerSubmitted = false;
 
@@ -135,8 +198,9 @@ function displayCard(index) {
   // Update Dinosaur Frame State
   dinoFrame.className = 'dino-frame state-neutral';
 
-  // Render Dinosaur SVG
+  // Render Dinosaur SVG with selected species
   dinoContainer.innerHTML = renderDinosaurSvg({
+    species: currentDinoSpecies,
     word: currentWord.word,
     state: 'neutral',
   });
@@ -150,6 +214,9 @@ function displayCard(index) {
 
   // Reset Next Button state
   btnNext.classList.remove('pulse');
+
+  // Update visual keyboard next key guide
+  visualKeyboard.updateTargetKey(currentWord.word, '');
 }
 
 // Submit Word Check
@@ -208,6 +275,9 @@ async function submitWord() {
   } else {
     handleIncorrect(userText, targetWord);
   }
+
+  // Start 5-second auto advance cooldown ONLY AFTER SUBMIT!
+  startAutoAdvanceCooldown(5);
 }
 
 // Correct state presentation
@@ -219,6 +289,7 @@ function handleCorrect(userText) {
 
   // Render Cherished / Cheerful Dinosaur with big white checkmark
   dinoContainer.innerHTML = renderDinosaurSvg({
+    species: currentDinoSpecies,
     word: currentWord.word,
     state: 'correct',
     correctWord: currentWord.word,
@@ -239,6 +310,9 @@ function handleCorrect(userText) {
   // Nudge next button with glowing pulse
   btnNext.classList.add('pulse');
 
+  // Highlight Enter on virtual keyboard
+  visualKeyboard.updateTargetKey('', '');
+
   // Optional auto-speak praise
   setTimeout(() => {
     soundManager.speak(currentWord.word);
@@ -254,6 +328,7 @@ function handleIncorrect(userText, targetWord) {
 
   // Render Sad Dinosaur with big white cross & red banner
   dinoContainer.innerHTML = renderDinosaurSvg({
+    species: currentDinoSpecies,
     word: currentWord.word,
     state: 'incorrect',
     correctWord: targetWord,
@@ -271,10 +346,50 @@ function handleIncorrect(userText, targetWord) {
   feedbackBadge.innerHTML = '✖ Incorrect!';
 
   btnNext.classList.add('pulse');
+  visualKeyboard.updateTargetKey('', '');
+}
+
+// 5-Second Cooldown Auto Advance (Triggers ONLY AFTER SUBMIT)
+function startAutoAdvanceCooldown(totalSeconds = 5) {
+  stopAutoAdvanceCooldown();
+
+  if (!cooldownPill) return;
+
+  let remainingMs = totalSeconds * 1000;
+  const intervalMs = 100;
+
+  cooldownPill.classList.remove('hidden');
+  cooldownSeconds.textContent = `${totalSeconds}s`;
+  cooldownProgressBar.style.width = '100%';
+
+  cooldownInterval = setInterval(() => {
+    remainingMs -= intervalMs;
+
+    if (remainingMs <= 0) {
+      stopAutoAdvanceCooldown();
+      nextCard();
+    } else {
+      const secLeft = Math.ceil(remainingMs / 1000);
+      cooldownSeconds.textContent = `${secLeft}s`;
+      const pct = (remainingMs / (totalSeconds * 1000)) * 100;
+      cooldownProgressBar.style.width = `${pct}%`;
+    }
+  }, intervalMs);
+}
+
+function stopAutoAdvanceCooldown() {
+  if (cooldownInterval) {
+    clearInterval(cooldownInterval);
+    cooldownInterval = null;
+  }
+  if (cooldownPill) {
+    cooldownPill.classList.add('hidden');
+  }
 }
 
 // Advance to Next Card
 function nextCard() {
+  stopAutoAdvanceCooldown();
   soundManager.playPop();
 
   if (currentIndex + 1 < wordsDeck.length) {
@@ -286,6 +401,7 @@ function nextCard() {
 
 // Show Round Victory Celebration Modal
 function showVictoryModal() {
+  stopAutoAdvanceCooldown();
   soundManager.playFanfare();
   confetti.burst(window.innerWidth / 2, window.innerHeight / 3, 120);
 
@@ -308,7 +424,6 @@ typingForm.addEventListener('submit', (e) => {
 
 btnNext.addEventListener('click', () => {
   if (!isAnswerSubmitted) {
-    // If not checked yet, check first
     submitWord();
   } else {
     nextCard();
@@ -320,6 +435,25 @@ btnListen.addEventListener('click', () => {
     soundManager.playPop();
     soundManager.speak(currentWord.word);
   }
+});
+
+dinoSelect.addEventListener('change', () => {
+  soundManager.playPop();
+  currentDinoSpecies = resolveDinoSpecies();
+  dinoContainer.innerHTML = renderDinosaurSvg({
+    species: currentDinoSpecies,
+    word: currentWord ? currentWord.word : '',
+    state: cardState,
+    correctWord: currentWord ? currentWord.word : '',
+  });
+});
+
+btnToggleKeyboard.addEventListener('click', () => {
+  soundManager.playPop();
+  keyboardSection.classList.toggle('hidden');
+  btnToggleKeyboard.title = keyboardSection.classList.contains('hidden') 
+    ? 'Show On-Screen Keyboard' 
+    : 'Hide On-Screen Keyboard';
 });
 
 btnSoundToggle.addEventListener('click', () => {

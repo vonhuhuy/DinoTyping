@@ -739,6 +739,225 @@ body {
   z-index: 99;
 }
 
+/* Top left group */
+.top-left-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dino-select {
+  background: #24344d;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.dino-select:hover, .dino-select:focus {
+  border-color: #38bdf8;
+  background: #2c4060;
+}
+
+/* 5-Second Cooldown Bar (Triggers ONLY AFTER submit) */
+.cooldown-pill {
+  width: 100%;
+  max-width: 410px;
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 10px 16px;
+  margin: 6px 0 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.cooldown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+}
+
+.cooldown-text strong {
+  color: #38bdf8;
+  font-size: 1.05rem;
+}
+
+.cooldown-skip-hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.cooldown-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.cooldown-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+/* Virtual Keyboard Section */
+.keyboard-section {
+  width: 100%;
+  max-width: 680px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 14px 16px;
+  margin: 10px 0 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.keyboard-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-pinky { background: #f472b6; }
+.dot-ring  { background: #fb923c; }
+.dot-mid   { background: #facc15; }
+.dot-idx   { background: #38bdf8; }
+.dot-target { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+.virtual-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.keyboard-key {
+  height: 44px;
+  min-width: 38px;
+  flex: 1;
+  max-width: 54px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1e293b;
+  color: #f8fafc;
+  font-family: var(--font-family);
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.keyboard-key:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.2);
+}
+
+.keyboard-key:active, .keyboard-key.key-active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  filter: brightness(1.35);
+}
+
+/* Finger placement colors (soft pastel badges) */
+.keyboard-key.finger-pinky-l, .keyboard-key.finger-pinky-r {
+  border-bottom: 3px solid #f472b6;
+}
+.keyboard-key.finger-ring-l, .keyboard-key.finger-ring-r {
+  border-bottom: 3px solid #fb923c;
+}
+.keyboard-key.finger-mid-l, .keyboard-key.finger-mid-r {
+  border-bottom: 3px solid #facc15;
+}
+.keyboard-key.finger-idx-l, .keyboard-key.finger-idx-r {
+  border-bottom: 3px solid #38bdf8;
+}
+.keyboard-key.finger-thumb {
+  border-bottom: 3px solid #a78bfa;
+}
+
+.keyboard-key.key-wide {
+  flex: 1.6;
+  max-width: 88px;
+  font-size: 0.95rem;
+}
+
+.keyboard-key.key-space {
+  flex: 5;
+  max-width: 260px;
+}
+
+/* Pulsing Next Key Highlight Guide! */
+.keyboard-key.key-highlight-target {
+  background: #22c55e !important;
+  color: #ffffff !important;
+  border-color: #86efac !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.75), 0 3px 0 #15803d !important;
+  animation: keyPulse 0.9s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-2px);
+  z-index: 2;
+}
+
+@keyframes keyPulse {
+  from {
+    transform: translateY(-2px) scale(1);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d;
+  }
+  to {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 0 18px rgba(34, 197, 94, 0.95), 0 4px 0 #15803d;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .peeking-card {
@@ -753,4 +972,9 @@ body {
   .instructions-title {
     font-size: 1.1rem;
   }
+  .keyboard-key {
+    height: 38px;
+    font-size: 0.95rem;
+  }
 }
+
